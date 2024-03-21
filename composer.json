@@ -1,0 +1,38 @@
+{
+    "name": "starringjane/cookie-banner",
+    "description": "Magento 2 Cookie Banner",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "yireo/magento2-googletagmanager2": "^3.0",
+        "magento/framework": "*",
+        "magento/module-config": "^101.2"
+    },
+    "repositories": {
+        "magento": {
+            "type": "composer",
+            "url": "https://repo-magento-mirror.fooman.co.nz/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vanthuyne Joachim",
+            "email": "joachim@starringjane.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "StarringJane\\CookieBanner\\": "" },
+        "files": [ "registration.php" ]
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "magento/composer-dependency-version-audit-plugin": true
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10"
+    }
+}

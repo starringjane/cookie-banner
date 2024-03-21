@@ -1,0 +1,348 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Cookie\Block\Html\Notices;
+use Magento\Cookie\Helper\Cookie;
+use Magento\Framework\Escaper;
+
+/** @var Notices $block */
+/** @var Cookie $cookieHelper */
+/** @var Escaper $escaper */
+
+$cookieHelper = $block->getData('cookieHelper');
+$cookieName =  /* @noEscape */ Cookie::IS_USER_ALLOWED_SAVE_COOKIE;
+$cookieValue =  /* @noEscape */  $cookieHelper->getAcceptedSaveCookiesWebsiteIds();
+$cookieLifetime = /* @noEscape */ $cookieHelper->getCookieRestrictionLifetime();
+?>
+<script>
+    const isUserAllowedSaveCookieName = '<?= /* @noEscape */  Cookie::IS_USER_ALLOWED_SAVE_COOKIE ?>';
+
+    var options = {
+        cookieName: isUserAllowedSaveCookieName,
+        cookieValue: '<?= /* @noEscape */ $cookieHelper->getAcceptedSaveCookiesWebsiteIds() ?>',
+        cookieLifetime: '<?= /* @noEscape */ $cookieHelper->getCookieRestrictionLifetime() ?>',
+        noCookiesUrl: '<?= /* @noEscape */ $escaper->escapeJs($block->getUrl('cookie/index/noCookies')) ?>'
+    }
+
+    window.addEventListener("default-consent-loaded", function (event) {
+        initCookieConsent();
+    });
+
+    const initCookieConsent = function () {
+        /**
+         * All config. options available here:
+         * https://cookieconsent.orestbida.com/reference/configuration-reference.html
+         */
+        CookieConsent.run({
+            categories: {
+                necessary: {
+                    readOnly: true,
+                    enabled: true,
+                },
+                analytics: {
+                    autoClear: {
+                        cookies: [
+                            {
+                                name: /^(_ga|_gid)/,
+                            },
+                        ],
+                    },
+                },
+                marketing: {
+                    autoClear: {
+                        cookies: [
+                            {
+                                name: /^(_ga|_gid)/,
+                            },
+                        ],
+                    },
+                },
+            },
+            guiOptions: {
+                consentModal: {
+                    layout: "box inline",
+                    position: "bottom left",
+                    equalWeightButtons: true,
+                    flipButtons: false
+                },
+                preferencesModal: {
+                    layout: "box",
+                    position: "right",
+                    equalWeightButtons: true,
+                    flipButtons: false
+                }
+            },
+            expiresAfterDays: 365,
+            autoClearCookies: true, // default: false
+            manageScriptTags: true, // default: false
+            language: {
+                default: document.documentElement.lang,
+                autoDetect: 'document',
+                translations: {
+                    'nl-be': {
+                        consentModal: {
+                            label: "Cookies",
+                            description: "Onze website gebruikt cookies om onze site en diensten aan te passen naar jouw voorkeuren. Voor meer informatie over hoe wij cookies gebruiken kan je onze <a href=''><strong>cookie policy</strong></a> lezen.",
+                            acceptAllBtn: "Alles accepteren",
+                            acceptNecessaryBtn: "Alles weigeren",
+                            showPreferencesBtn: "Voorkeuren",
+                            closeIconLabel: "Alles weigeren en sluiten",
+                            title: "Cookies"
+                        },
+                        preferencesModal: {
+                            title: "Cookie voorkeuren",
+                            acceptAllBtn: "Alles accepteren",
+                            acceptNecessaryBtn: "Alles weigeren",
+                            savePreferencesBtn: "Voorkeuren opslaan",
+                            closeIconLabel: "Venster sluiten",
+                            serviceCounterLabel: "Dienst|Diensten",
+                            sections: [
+                                {
+                                    title: "Cookie gebruik 📢",
+                                    description: 'We gebruiken verschillende soorten cookies om jouw gebruikerservaring te optimaliseren. Elk van deze categorieën kan afgewezen worden. Voor meer informatie over hoe we je data verwerken kan je onze <a href="/nl/privacy-policy" class="cc-link">privacy policy</a> lezen.'
+                                },
+                                {
+                                    title: "Noodzakelijke cookies <span class=\"pm__badge\">Altijd actief</span>",
+                                    description: "Deze cookies zijn noodzakelijk voor de werking van de site, zoals bijvoorbeeld voor het bijhouden van het winkelmandje.",
+                                    linkedCategory: "necessary",
+                                    cookieTable: {
+                                        headers: {
+                                            name: 'Name',
+                                            domain: 'Domain',
+                                            expiration: 'Expiration',
+                                            desc: 'Description',
+                                        },
+                                        body: [
+                                            {
+                                                name: 'cc_cookie', // regex: match all cookies starting with '_ga'
+                                                domain: window.location.origin, // current domain
+                                                expiration: '1 jaar',
+                                                desc: 'Met deze cookie kunnen we uw voorkeuren met betrekking tot cookietoestemming onthouden.',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    title: "Analytische Cookies",
+                                    description: "Dankzij onze analytical cookies, krijgen we meer inzicht over hoe we jouw gebruikerservaring kunnen verbeteren.",
+                                    linkedCategory: "analytics",
+                                    cookieTable: {
+                                        headers: {
+                                            name: "Name",
+                                            description: "Beschrijving",
+                                            Service: "Service"
+                                        },
+                                        body: [
+                                            {
+                                                name: "_ga_*, _gid",
+                                                description: "Used to track you ...",
+                                                Service: "Google Analytics"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    title: "Marketing Cookies",
+                                    description: "Deze cookies laten ons toe jou een meer persoonlijke ervaring aan te bieden.",
+                                    linkedCategory: "marketing"
+                                },
+                                {
+                                    title: "Meer informatie",
+                                    description: 'Heb je nog vragen over onze policies? <a class="cc-link" href="/contact">Stuur ons gerust een berichtje!</a>'
+                                }
+                            ]
+                        }
+                    },
+                    'en-en': {
+                        consentModal: {
+                            label: "Cookies",
+                            description: "Our website uses cookies to tailor our site and services to your preferences. For more information on how we use cookies, please read our <a href=''><strong>cookie policy.</strong></a>",
+                            acceptAllBtn: "Accept All",
+                            acceptNecessaryBtn: "Decline All",
+                            showPreferencesBtn: "Preferences",
+                            closeIconLabel: "Decline All and Close",
+                            title: "Cookies"
+                        },
+                        preferencesModal: {
+                            title: "Cookie Preferences",
+                            acceptAllBtn: "Accept All",
+                            acceptNecessaryBtn: "Decline All",
+                            savePreferencesBtn: "Save Preferences",
+                            closeIconLabel: "Close Window",
+                            serviceCounterLabel: "Service|Services",
+                            sections: [
+                                {
+                                    title: "Cookie Usage 📢",
+                                    description: "We use different types of cookies to optimize your user experience. Each of these categories can be declined. For more information on how we process your data, you can read our <a href='' class='cc-link'>privacy policy</a>.",
+                                },
+                                {
+                                    title: "Necessary Cookies <span class=\"pm__badge\">Always Active</span>",
+                                    description: "These cookies are necessary for the operation of the site, such as tracking the shopping cart.",
+                                    linkedCategory: "necessary",
+                                    cookieTable: {
+                                        headers: {
+                                            name: 'Name',
+                                            domain: 'Domain',
+                                            expiration: 'Expiration',
+                                            desc: 'Description',
+                                        },
+                                        body: [
+                                            {
+                                                name: 'cc_cookie', // regex: match all cookies starting with '_ga'
+                                                domain: window.location.origin, // current domain
+                                                expiration: '1 year',
+                                                desc: "This cookie allows us to remember your cookie consent preferences.",
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    title: "Analytical Cookies",
+                                    description: "Thanks to our analytical cookies, we gain insights into how we can improve your user experience.",
+                                    linkedCategory: "analytics",
+                                    cookieTable: {
+                                        headers: {
+                                            name: "Name",
+                                            description: "Description",
+                                            Service: "Service"
+                                        },
+                                        body: [
+                                            {
+                                                name: "_ga_*, _gid",
+                                                description: "Used to track you ...",
+                                                Service: "Google Analytics"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    title: "Marketing Cookies",
+                                    description: "These cookies allow us to provide you with a more personalized experience.",
+                                    linkedCategory: "marketing"
+                                },
+                                {
+                                    title: "More Information",
+                                    description: "Still have questions about our policies? <a class='cc-link' href='/contact'>Feel free to drop us a message!</a>"
+                                }
+                            ]
+                        }
+                    },
+                    'fr-be': {
+                        consentModal: {
+                            label: "Cookies",
+                            description: "Notre site web utilise des cookies pour adapter notre site et nos services à vos préférences. Pour plus d'informations sur la manière dont nous utilisons les cookies, veuillez lire notre <a href='/fr/privacy-policy'><strong>politique en matière de cookies.</strong></a>",
+                            acceptAllBtn: "Tout accepter",
+                            acceptNecessaryBtn: "Refuser tout",
+                            showPreferencesBtn: "Préférences",
+                            closeIconLabel: "Refuser tout et fermer",
+                            title: "Cookies"
+                        },
+                        preferencesModal: {
+                            title: "Préférences de cookies",
+                            acceptAllBtn: "Tout accepter",
+                            acceptNecessaryBtn: "Refuser tout",
+                            savePreferencesBtn: "Enregistrer les préférences",
+                            closeIconLabel: "Fermer la fenêtre",
+                            serviceCounterLabel: "Service|Services",
+                            sections: [
+                                {
+                                    title: "Utilisation des cookies 📢",
+                                    description: "Nous utilisons différents types de cookies pour optimiser votre expérience utilisateur. Chacune de ces catégories peut être refusée. Pour en savoir plus sur la manière dont nous traitons vos données, vous pouvez consulter notre <a href='/fr/privacy-policy' class='cc-link'>politique de confidentialité</a>.",
+                                },
+                                {
+                                    title: "Cookies nécessaires <span class='pm__badge'>Toujours actifs</span>",
+                                    description: "Ces cookies sont nécessaires au fonctionnement du site, par exemple pour le suivi du panier d'achat.",
+                                    linkedCategory: "necessary",
+                                    cookieTable: {
+                                        headers: {
+                                            name: 'Nom',
+                                            domain: 'Domaine',
+                                            expiration: 'Expiration',
+                                            desc: 'Description',
+                                        },
+                                        body: [
+                                            {
+                                                name: 'cc_cookie',
+                                                domain: window.location.origin,
+                                                expiration: '1 an',
+                                                desc: "Ce cookie nous permet de mémoriser vos préférences en matière de consentement aux cookies.",
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    title: "Cookies analytiques",
+                                    description: "Grâce à nos cookies analytiques, nous obtenons une meilleure compréhension de la façon dont nous pouvons améliorer votre expérience utilisateur.",
+                                    linkedCategory: "analytics",
+                                    cookieTable: {
+                                        headers: {
+                                            name: "Nom",
+                                            description: "Description",
+                                            Service: "Service"
+                                        },
+                                        body: [
+                                            {
+                                                name: "_ga_*, _gid",
+                                                description: "Utilisé pour vous suivre ...",
+                                                Service: "Google Analytics"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    title: "Cookies marketing",
+                                    description: "Ces cookies nous permettent de vous offrir une expérience plus personnalisée.",
+                                    linkedCategory: "marketing"
+                                },
+                                {
+                                    title: "Plus d'informations",
+                                    description: "Vous avez encore des questions sur nos politiques ? <a class='cc-link' href='/contact'>N'hésitez pas à nous envoyer un message !</a>"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            onConsent: () => {
+                sendPreferences();
+
+                const cookieExpires = options.cookieLifetime / 60 / 60 / 24;
+                if (CookieConsent.acceptedCategory('marketing')) {
+                    window.hyva.setCookie(options.cookieName, options.cookieValue, cookieExpires);
+                }
+                window.dispatchEvent(new CustomEvent('user-allowed-save-cookie'));
+            },
+            onChange: () => {
+                sendPreferences();
+
+                const cookieExpires = options.cookieLifetime / 60 / 60 / 24;
+                if(changedCategories.includes('marketing')){
+                    window.hyva.setCookie(options.cookieName, '0', 365 * 2);
+                    if(CookieConsent.acceptedCategory('marketing')) window.hyva.setCookie(options.cookieName, options.cookieValue, cookieExpires);
+
+                }
+            }
+        });
+    }
+
+    function sendPreferences () {
+        // Define dataLayer
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+
+        gtag('consent', 'update', {
+            analytics_storage: CookieConsent.acceptedCategory('analytics') ? 'granted' : 'denied',
+            functionality_storage: CookieConsent.acceptedCategory('necessary') ? 'granted' : 'denied',
+            personalization_storage: CookieConsent.acceptedCategory('marketing') ? 'granted' : 'denied',
+            security_storage: CookieConsent.acceptedCategory('necessary') ? 'granted' : 'denied',
+            ad_storage: CookieConsent.acceptedCategory('marketing') ? 'granted' : 'denied',
+            ad_personalization: CookieConsent.acceptedCategory('analytics') ? 'granted' : 'denied',
+            ad_user_data: CookieConsent.acceptedCategory('analytics') ? 'granted' : 'denied',
+        });
+
+        window.dataLayer.push({
+            event: 'Cookie preferences',
+            cookies: CookieConsent.getUserPreferences().acceptedCategories.join(' '),
+        });
+    }
+</script>

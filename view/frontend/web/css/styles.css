@@ -1,0 +1,16 @@
+/*
+* Overwrite cookie banner colors and styling
+*/
+:root {
+    --cc-btn-primary-bg: rgb(0 190 39);
+    --cc-btn-primary-hover-bg: rgb(0 190 39);
+    --cc-toggle-off-bg: rgb(194 242 166);
+    --cc-toggle-on-bg: rgb(0 190 39);
+    --cc-toggle-on-knob-bg: #007E1A;
+    --cc-toggle-readonly-bg: #C2F2A6;
+    --cc-toggle-readonly-knob-bg: #8BDB5D;
+}
+
+#cc-main .pm__section--expandable .pm__section-arrow {
+    background-color: #d5dee2;
+}
