@@ -10,6 +10,8 @@ This module uses the [Yireo Google Tag manager module](https://github.com/yireo/
 
 ## Configuration
 1. Enable the Yireo tag manager module
+2. `bin/magento config:set --lock-config web/cookie/cookie_restriction	1`
+3. `bin/magento cache:clean`
 
 ## License
 [MIT](LICENSE)
